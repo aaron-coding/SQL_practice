@@ -10,20 +10,33 @@ class User
     @lname     = options['lname']
   end
   
-  def asked_questions
+  def authored_questions
+    Question.find_by_author_id(@id)
+    # query = <<-SQL
+    # SELECT
+    # *
+    # FROM
+    # questions
+    # WHERE
+    # user_id = ?
+    # SQL
+    # questions = QuestionsDatabase.instance.execute(query, @id)
+    # questions.map { |hash| Question.new(hash) }
+  end
+  
+  def authored_replies
     query = <<-SQL
     SELECT
     *
-    FROM 
-    questions
+    FROM
+    replies
     WHERE
     user_id = ?
     SQL
-    questions = QuestionsDatabase.instance.execute(query, @id)
-    questions.map { |question_hash| Question.new(question_hash) }
+
+    replies = QuestionsDatabase.instance.execute(query, @id)
+    replies.map { |hash| Question.new(hash) }
   end
-  
-  
   
   def self.all
     results = QuestionsDatabase.instance.execute('SELECT * FROM users')
