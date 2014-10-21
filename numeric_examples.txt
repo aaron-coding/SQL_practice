@@ -63,7 +63,7 @@ GROUP BY
 
 #6
 SELECT
-  subject, ROUND(SUM(response * A_STRONGLY_AGREE * .01), 2) 
+  subject, ROUND(SUM(response * A_STRONGLY_AGREE) / SUM(response))
 FROM
   nss
 WHERE
@@ -71,11 +71,21 @@ WHERE
 AND (
   subject = '(8) Computer Science'
 OR
-  subject = '(H) Creative Arts and Design')
+  subject = '(H) Creative Arts and Design' )
 GROUP BY
-  subject  
+  subject
+  
+#7
+SELECT 
+  institution, ROUND(SUM(score * response) / SUM(response))
+FROM 
+  nss
+WHERE 
+  question='Q22'
+AND 
+  (institution LIKE '%Manchester%')
+GROUP BY 
+  institution
 
-  
-  
   
   
