@@ -24,4 +24,35 @@ class Question
     SQL
     Question.new(question_hash)
   end
+  
+  def create
+    QuestionsDatabase.instance.execute(<<-SQL, @title, @body, @user_id)
+    INSERT INTO
+      questions (title, body, user_id)
+    VALUES
+     (?, ?, ?)
+    SQL
+    
+    @id = QuestionsDatabase.instance.last_insert_row_id
+  end
+  
+  def author
+    user = QuestionsDatabase.instance.execute(<<-SQL, @user_id)
+    SELECT
+    *
+    FROM
+    users
+    WHERE
+    id = ?
+    SQL
+    
+    User.new(user.first)
+  end
+  
+  def replies
+    Reply.find_by_question_id(@id)
+  end
+  
+  
+  
 end
