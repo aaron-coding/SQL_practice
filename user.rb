@@ -51,7 +51,7 @@ class User
       WHERE 
         id = ?
     SQL
-    User.new(user_hash)
+    User.new(user_hash.first)
   end
   
   def self.find_by_name(fname, lname)
@@ -79,6 +79,32 @@ class User
       (?, ?)
     SQL
     @id = QuestionsDatabase.instance.last_insert_row_id
+  end
+  
+  def followed_questions
+    QuestionFollower.followed_questions_for_user_id(@id)
+  end
+  
+  def liked_questions
+    QuestionLike.liked_questions_for_user_id(@id)
+  end
+  
+  def average_karma
+    avg_karma =QuestionsDatabase.instance.execute(<<-SQL, @id)
+    SELECT 
+      COUNT(questions.id) AS questions, COUNT(question_likes.id) AS likes 
+    FROM
+      questions
+    JOIN
+      question_likes
+    ON
+      question_id = questions.id
+    WHERE
+      questions.user_id = ?
+    GROUP BY
+      questions.user_id
+    SQL
+    questions, likes = avg_karma.first.values
   end
   
 end

@@ -22,7 +22,20 @@ class Question
       WHERE 
         id = ?
     SQL
-    Question.new(question_hash)
+    Question.new(question_hash.first)
+  end
+  
+  def self.find_by_author_id(user_id)
+    questions = QuestionsDatabase.instance.execute(<<-SQL, user_id)
+    SELECT
+    *
+    FROM
+    questions
+    WHERE
+    user_id = ?
+    SQL
+    
+    questions.map { |hash| Question.new(hash) }    
   end
   
   def create
@@ -53,6 +66,25 @@ class Question
     Reply.find_by_question_id(@id)
   end
   
+  def followers
+    QuestionFollower.followers_for_question_id(@id)
+  end
   
+  def self.most_followed(n)
+    QuestionFollower.most_followed_questions(n)
+  end
   
+  def self.most_liked(n)
+    QuestionLike.most_liked_questions(n)
+  end  
+  
+  def likers
+    QuestionLike.likers_for_question_id(@id)
+  end  
+  
+  def num_likes
+    QuestionLike.num_likes_for_question_id(@id)
+  end
+  
+
 end
