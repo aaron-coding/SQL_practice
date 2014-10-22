@@ -38,6 +38,11 @@ class Question
     questions.map { |hash| Question.new(hash) }    
   end
   
+  def save
+    raise "already exists" unless @id.nil?
+    @id 
+  end
+  
   def create
     QuestionsDatabase.instance.execute(<<-SQL, @title, @body, @user_id)
     INSERT INTO

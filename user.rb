@@ -67,6 +67,23 @@ class User
     #User.new(user_hash)
   end
   
+  def save
+    if self.id.nil?
+      create
+    else
+      update
+    end
+  end
+
+  def update
+    QuestionsDatabase.instance.execute(<<-SQL, @fname, @lname, @id)
+    UPDATE
+    users
+    SET fname = ?, lname = ?
+    WHERE id = ?
+    SQL
+  end
+  
   def create
     raise "User already exists" unless self.id.nil?
     
@@ -77,6 +94,7 @@ class User
       (?, ?)
     SQL
     @id = QuestionsDatabase.instance.last_insert_row_id
+    self
   end
   
   def followed_questions
