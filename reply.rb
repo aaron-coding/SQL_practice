@@ -1,5 +1,5 @@
 class Reply
-  attr_accessor :question_id, :follower_id
+  attr_accessor :question_id, :parent_reply_id, :user_id, :body
   attr_reader :id
   
   def initialize(options = {})
