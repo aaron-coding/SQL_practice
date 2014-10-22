@@ -1,13 +1,11 @@
 class User
   attr_accessor :fname, :lname
   attr_reader   :id
-  
-  
-  
+
   def initialize(options = {})
-    @id       = options['id']
-    @fname    = options['fname']
-    @lname     = options['lname']
+    @id = options['id']
+    @fname = options['fname']
+    @lname = options['lname']
   end
   
   def authored_questions
@@ -91,20 +89,21 @@ class User
   
   def average_karma
     avg_karma =QuestionsDatabase.instance.execute(<<-SQL, @id)
-    SELECT 
-      COUNT(questions.id) AS questions, COUNT(question_likes.id) AS likes 
+    SELECT
+      (CAST(COUNT(question_likes.id) AS FLOAT) / 
+      COUNT(DISTINCT questions.id)) AS avg
     FROM
       questions
     JOIN
       question_likes
     ON
       question_id = questions.id
-    WHERE
+    WHERE 
       questions.user_id = ?
-    GROUP BY
+    GROUP BY 
       questions.user_id
     SQL
-    questions, likes = avg_karma.first.values
+    avg_karma.first['avg']
   end
   
 end
