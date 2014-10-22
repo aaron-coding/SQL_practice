@@ -16,3 +16,4 @@ u1 = User.find_by_id(1)
 
 p u1.instance_variables
 
+
