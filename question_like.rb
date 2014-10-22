@@ -16,7 +16,7 @@ class QuestionLike
       WHERE 
         id = ?
     SQL
-    Reply.new(question_like_hash)
+    QuestionLike.new(question_like_hash.first)
   end
   
   def self.likers_for_question_id(question_id)
@@ -31,7 +31,7 @@ class QuestionLike
     WHERE
       question_id = ?
     SQL
-    users.map {|user| User.new(user) }
+    users.map { |user| User.new(user) }
   end
   
   def self.liked_questions_for_user_id(user_id)
