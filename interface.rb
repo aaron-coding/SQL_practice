@@ -12,5 +12,7 @@ require_relative 'reply'
 # p QuestionFollower.most_followed_questions(2)
 
 
+u1 = User.find_by_id(1)
 
-p User.all[0].average_karma
+p u1.instance_variables
+
